@@ -1,6 +1,6 @@
 {
   "name": "@gnome-trading-group/gnome-shared-cdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

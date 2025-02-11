@@ -1,3 +1,5 @@
+import * as cdk from 'aws-cdk-lib';
+
 export enum Stage {
   DEV = "dev",
   STAGING = "staging",
@@ -26,6 +28,13 @@ export class GnomeAccount {
     public readonly region: string,
     public readonly stage: Stage,
   ) {}
+
+  get environment(): cdk.Environment {
+    return {
+      account: this.accountId,
+      region: this.region
+    }
+  }
 }
 
 export const INFRA_ACCOUNTS = [GnomeAccount.InfraDev, GnomeAccount.InfraStaging, GnomeAccount.InfraProd];

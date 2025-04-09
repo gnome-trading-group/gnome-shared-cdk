@@ -13,10 +13,10 @@ export class GnomeAccount {
     "infra-dev", "443370708724", "us-east-1", Stage.DEV,
   );
   public static readonly InfraStaging = new GnomeAccount(
-    "infra-staging", "774305600313", "us-east-1", Stage.DEV,
+    "infra-staging", "774305600313", "us-east-1", Stage.STAGING,
   );
   public static readonly InfraProd = new GnomeAccount(
-    "infra-prod", "241533121172", "us-east-1", Stage.DEV,
+    "infra-prod", "241533121172", "us-east-1", Stage.PROD,
   );
   public static readonly InfraPipelines = new GnomeAccount(
     "infra-pipelines", "043309336849", "us-east-1", Stage.PIPELINES,

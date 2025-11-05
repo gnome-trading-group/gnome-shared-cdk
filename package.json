@@ -1,6 +1,6 @@
 {
   "name": "@gnome-trading-group/gnome-shared-cdk",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -15,6 +15,7 @@
   "license": "ISC",
   "description": "Shared variables and constructs for CDK",
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "typescript": "^5.7.3"
   },
   "dependencies": {

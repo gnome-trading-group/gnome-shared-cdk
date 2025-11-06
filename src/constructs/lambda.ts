@@ -10,6 +10,7 @@ export interface OrchestratorLambdaProps {
   classPath: string;
   lambdaName: string;
   region: string;
+  environmentVariables?: { [key: string]: string };
   memorySize?: number;
   timeout?: number;
 }
@@ -58,6 +59,7 @@ export class OrchestratorLambda extends Construct {
       memorySize: props.memorySize ?? 3008,
       timeout: cdk.Duration.minutes(props.timeout ?? 10),
       role,
+      environment: props.environmentVariables ?? {},
     });
   }
 }

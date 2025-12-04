@@ -1,6 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Construct } from 'constructs';
@@ -13,6 +14,7 @@ export interface OrchestratorLambdaProps {
   environmentVariables?: { [key: string]: string };
   memorySize?: number;
   timeout?: number;
+  logGroup?: ILogGroup;
 }
 
 export class OrchestratorLambda extends Construct {
@@ -60,6 +62,7 @@ export class OrchestratorLambda extends Construct {
       timeout: cdk.Duration.minutes(props.timeout ?? 10),
       role,
       environment: props.environmentVariables ?? {},
+      logGroup: props.logGroup,
     });
   }
 }

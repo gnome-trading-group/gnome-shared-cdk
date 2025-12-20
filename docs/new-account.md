@@ -6,7 +6,35 @@ This document is a brief overview of the manual steps needing when creating a ne
 
 1. `GITHUB_MAVEN`
 
-### Step 2: ChatBot
+### Step 2: Bootstrapping CDK
 
-The integration between Slack and AWS ChatBot is a manual step.
+```
+regions=(
+  us-east-1
+  us-east-2
+  us-west-1
+  us-west-2
+  eu-west-1
+  eu-west-2
+  eu-central-1
+  ap-northeast-1
+  ap-northeast-2
+  ap-southeast-1
+  ap-southeast-2
+  ap-south-1
+  sa-east-1
+)
+account_id=...
 
+for region in "${regions[@]}"; do
+  (
+    cdk bootstrap \
+      $account_id/$region \
+      --trust 043309336849 \
+      --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess \
+      --profile AWSAdministratorAccess-$account_id
+  ) &
+done
+
+wait
+```

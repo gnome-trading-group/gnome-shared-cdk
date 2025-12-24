@@ -24,16 +24,14 @@ regions=(
   ap-south-1
   sa-east-1
 )
-account_id=...
-
+account_id=<ACCOUNT_ID>
 for region in "${regions[@]}"; do
-  (
     cdk bootstrap \
       $account_id/$region \
-      --trust 043309336849 \
+      --trust 443370708724 \
+      --trust-for-lookup 443370708724 \
       --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess \
       --profile AWSAdministratorAccess-$account_id
-  ) &
 done
 
 wait

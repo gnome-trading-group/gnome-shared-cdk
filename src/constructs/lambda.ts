@@ -1,20 +1,14 @@
 import * as cdk from "aws-cdk-lib";
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Construct } from 'constructs';
 
-export interface OrchestratorLambdaProps {
+export interface OrchestratorLambdaProps extends lambda.FunctionOptions {
   orchestratorVersion: string;
   classPath: string;
   lambdaName: string;
-  region: string;
-  environmentVariables?: { [key: string]: string };
-  memorySize?: number;
-  timeout?: number;
-  logGroup?: ILogGroup;
 }
 
 export class OrchestratorLambda extends Construct {
@@ -50,6 +44,7 @@ export class OrchestratorLambda extends Construct {
     const role = new iam.Role(this, `${props.lambdaName}Role`, {
       description: `Execution role for ${props.lambdaName}`,
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')],
     });
 
     this.lambdaInstance = new lambda.DockerImageFunction(this, props.lambdaName, {
@@ -59,10 +54,9 @@ export class OrchestratorLambda extends Construct {
         },
       }),
       memorySize: props.memorySize ?? 3008,
-      timeout: cdk.Duration.minutes(props.timeout ?? 10),
+      timeout: props.timeout ?? cdk.Duration.minutes(10),
       role,
-      environment: props.environmentVariables ?? {},
-      logGroup: props.logGroup,
+      ...props,
     });
   }
 }

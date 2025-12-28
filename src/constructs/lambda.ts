@@ -13,6 +13,7 @@ export interface OrchestratorLambdaProps extends lambda.FunctionOptions {
 
 export class OrchestratorLambda extends Construct {
 
+  private readonly DEFAULT_JVM_OPTIONS = " --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED";
   public readonly lambdaInstance: lambda.IFunction;
 
   constructor(scope: Construct, id: string, props: OrchestratorLambdaProps) {
@@ -47,6 +48,13 @@ export class OrchestratorLambda extends Construct {
       managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')],
     });
 
+    const environment: { [key: string]: string } = {
+      ...(props.environment || {}),
+    };
+
+    environment.JAVA_TOOL_OPTIONS = `${environment.JAVA_TOOL_OPTIONS ?? ''}${this.DEFAULT_JVM_OPTIONS}`;
+
+
     this.lambdaInstance = new lambda.DockerImageFunction(this, props.lambdaName, {
       code: lambda.DockerImageCode.fromImageAsset(dockerDir, {
         buildSecrets: {
@@ -57,6 +65,7 @@ export class OrchestratorLambda extends Construct {
       timeout: props.timeout ?? cdk.Duration.minutes(10),
       role,
       ...props,
+      environment,
     });
   }
 }

@@ -20,6 +20,7 @@ jobs:
           scope: '@gnome-trading-group'
       - run: npm ci
       - run: npm run build
+      - run: npm test
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

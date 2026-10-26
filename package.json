@@ -1,11 +1,12 @@
 {
   "name": "@gnome-trading-group/gnome-shared-cdk",
-  "version": "1.0.15",
+  "version": "1.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -r ./dist || true"
+    "clean": "rm -r ./dist || true",
+    "test": "jest"
   },
   "files": [
     "dist/"
@@ -15,8 +16,12 @@
   "license": "ISC",
   "description": "Shared variables and constructs for CDK",
   "devDependencies": {
+    "@aws-sdk/client-api-gateway": "^3.1156.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^24.10.0",
     "aws-cdk-lib": "^2.178.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.15",
     "typescript": "^5.7.3"
   },
   "peerDependencies": {

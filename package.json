@@ -1,6 +1,6 @@
 {
   "name": "@gnome-trading-group/gnome-shared-cdk",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -17,6 +17,7 @@
   "description": "Shared variables and constructs for CDK",
   "devDependencies": {
     "@aws-sdk/client-api-gateway": "^3.1156.0",
+    "@aws-sdk/client-secrets-manager": "^3.1156.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^24.10.0",
     "aws-cdk-lib": "^2.178.1",

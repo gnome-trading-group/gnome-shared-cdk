@@ -60,19 +60,33 @@ export function publicSubnetCidr(stage: string, region: string, zoneIndex: numbe
 // The lower /17 holds public /20s; the upper /17 is kept for private subnets.
 const PUBLIC_SUBNET_ZONES_MAX = 8;
 
-// The zones each region's network spans, named rather than looked up so a pipeline can synthesize without AWS
-// credentials. Not every region has an 'a' and 'b': ap-northeast-1's zones are a, c and d.
-const PLATFORM_AVAILABILITY_ZONES: Readonly<Record<string, readonly string[]>> = Object.freeze({
-  'us-east-1': ['us-east-1a', 'us-east-1b'],
-  'ap-northeast-1': ['ap-northeast-1a', 'ap-northeast-1c'],
-  'eu-west-1': ['eu-west-1a', 'eu-west-1b'],
+// The zones each region's network spans, by name and by zone ID. Names are what CloudFormation takes, but a name can
+// be a different physical zone in another account; the ID is the physical zone, the same everywhere, and is what is
+// meant (checked against both accounts 2026-10-27: these names are these IDs in dev and prod). Named rather than looked
+// up so a pipeline synthesizes without credentials. Append only: zone i gets public subnet i, so reordering or removing
+// a zone moves every later subnet's range and replaces it. Not every region has an 'a' and 'b' (ap-northeast-1 has a,
+// c and d).
+export interface PlatformZone {
+  name: string;
+  id: string;
+}
+
+const PLATFORM_AVAILABILITY_ZONES: Readonly<Record<string, readonly PlatformZone[]>> = Object.freeze({
+  'us-east-1': [{ name: 'us-east-1a', id: 'use1-az2' }, { name: 'us-east-1b', id: 'use1-az4' }],
+  'ap-northeast-1': [{ name: 'ap-northeast-1a', id: 'apne1-az4' }, { name: 'ap-northeast-1c', id: 'apne1-az1' }],
+  'eu-west-1': [{ name: 'eu-west-1a', id: 'euw1-az2' }, { name: 'eu-west-1b', id: 'euw1-az3' }],
 });
 
-/** The availability zones a region's network spans, in order: zone i gets public subnet i. */
-export function platformZones(region: string): string[] {
+/** The zones a region's network spans, in order: zone i gets public subnet i. */
+export function platformZoneIds(region: string): PlatformZone[] {
   const zones = PLATFORM_AVAILABILITY_ZONES[region];
   if (zones === undefined) throw new Error(`${region} is not a platform region`);
-  return [...zones];
+  return zones.map((z) => ({ ...z }));
+}
+
+/** The zones' names, in order, as CloudFormation takes them. */
+export function platformZones(region: string): string[] {
+  return platformZoneIds(region).map((z) => z.name);
 }
 
 export const PLATFORM_VPC_NAME = 'gnome-platform';

@@ -1,5 +1,5 @@
 import {
-  allPlatformCidrs, platformCidr, platformRegions, platformZones, PRIMARY_REGION, publicSubnetCidr, replicaRegions,
+  allPlatformCidrs, platformCidr, platformRegions, platformZoneIds, platformZones, PRIMARY_REGION, publicSubnetCidr, replicaRegions,
 } from '../src/regions';
 
 describe('platform regions', () => {
@@ -41,5 +41,15 @@ describe('platform regions', () => {
       expect(zones.every((z) => z.startsWith(region))).toBe(true);
     }
     expect(platformZones('ap-northeast-1')).toEqual(['ap-northeast-1a', 'ap-northeast-1c']);
+  });
+
+  it('says which physical zone each name is meant to be', () => {
+    expect(platformZoneIds('us-east-1')).toEqual([
+      { name: 'us-east-1a', id: 'use1-az2' }, { name: 'us-east-1b', id: 'use1-az4' },
+    ]);
+    for (const region of platformRegions()) {
+      expect(platformZoneIds(region).map((z) => z.name)).toEqual(platformZones(region));
+      expect(new Set(platformZoneIds(region).map((z) => z.id)).size).toBe(2);
+    }
   });
 });

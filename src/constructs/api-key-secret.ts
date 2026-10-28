@@ -14,6 +14,8 @@ import { Construct } from 'constructs';
 export const API_KEY_SECRET_NAMES = {
   REGISTRY: 'gnome/api-keys/registry',
   CONTROLLER_SERVICE_CONFIG: 'gnome/api-keys/controller-service-config',
+  // gnome-market-data's API key: systems that drive collection call its rules routes with it.
+  MARKET_DATA: 'gnome/api-keys/market-data',
 } as const;
 
 export interface ApiKeySecretProps {

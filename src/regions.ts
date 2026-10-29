@@ -97,6 +97,17 @@ export const PLATFORM_NETWORK_TAG = { key: 'gnome:network', value: 'platform' } 
 /** UDP ports the platform security group admits from every platform CIDR: Aeron, for streams read across regions. */
 export const AERON_PORTS = Object.freeze({ from: 40000, to: 40999 });
 
+/**
+ * How AERON_PORTS is split. Mirrors gnome-orchestrator's `AeronPorts`; change both together. Shards and gateways
+ * listen on fixed ports; a receiving host's driver hands out one port per shard or gateway it reads from `receive`.
+ */
+export const AERON_PORT_MAP = Object.freeze({
+  shardControl: 40000,
+  gatewayIngress: Object.freeze({ from: 40010, to: 40019 }),
+  receive: Object.freeze({ from: 40100, to: 40899 }),
+  reserved: Object.freeze({ from: 40900, to: 40999 }),
+});
+
 /** Where each region's network is published, for callers that find it at run time rather than at synth. */
 export const PLATFORM_SSM = Object.freeze({
   vpcId: '/gnome/platform-network/vpc-id',

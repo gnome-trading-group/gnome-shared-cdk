@@ -1,5 +1,5 @@
 import {
-  allPlatformCidrs, platformCidr, platformRegions, platformZoneIds, platformZones, PRIMARY_REGION, publicSubnetCidr, replicaRegions,
+  AERON_PORT_MAP, AERON_PORTS, allPlatformCidrs, platformCidr, platformRegions, platformZoneIds, platformZones, PRIMARY_REGION, publicSubnetCidr, replicaRegions,
 } from '../src/regions';
 
 describe('platform regions', () => {
@@ -50,6 +50,21 @@ describe('platform regions', () => {
     for (const region of platformRegions()) {
       expect(platformZoneIds(region).map((z) => z.name)).toEqual(platformZones(region));
       expect(new Set(platformZoneIds(region).map((z) => z.id)).size).toBe(2);
+    }
+  });
+
+  it('splits the Aeron range into parts that stay inside it and never overlap', () => {
+    const parts = [
+      { from: AERON_PORT_MAP.shardControl, to: AERON_PORT_MAP.shardControl },
+      AERON_PORT_MAP.gatewayIngress, AERON_PORT_MAP.receive, AERON_PORT_MAP.reserved,
+    ];
+    for (const part of parts) {
+      expect(part.from).toBeGreaterThanOrEqual(AERON_PORTS.from);
+      expect(part.to).toBeLessThanOrEqual(AERON_PORTS.to);
+      expect(part.from).toBeLessThanOrEqual(part.to);
+    }
+    for (let i = 1; i < parts.length; i++) {
+      expect(parts[i].from).toBeGreaterThan(parts[i - 1].to);
     }
   });
 });
